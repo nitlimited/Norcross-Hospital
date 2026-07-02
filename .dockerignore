@@ -2,6 +2,9 @@
 .DS_Store
 ._*
 **/._*
+.env
+.env.*
+!.env.example
 node_modules
 dist
 npm-debug.log*

@@ -7,6 +7,7 @@ import CTASection from "../components/CTASection.jsx";
 import PhotoGallery from "../components/PhotoGallery.jsx";
 import { services, facilities, coreValues, founders } from "../data/content.js";
 import { images } from "../data/images.js";
+import { usePublicContent } from "../hooks/usePublicContent.js";
 
 const stats = [
   { value: "18", label: "Clinical Service Lines" },
@@ -16,8 +17,19 @@ const stats = [
 ];
 
 export default function Home() {
+  const { announcement } = usePublicContent();
+
   return (
     <div>
+      {announcement.enabled && (
+        <section className="border-b border-orange-100 bg-orange-50">
+          <div className="mx-auto max-w-7xl px-6 lg:px-10 py-4 flex flex-wrap items-center gap-x-4 gap-y-1">
+            <p className="font-semibold text-blue-900 text-[14px]">{announcement.title}</p>
+            <p className="text-slate text-[14px]">{announcement.body}</p>
+          </div>
+        </section>
+      )}
+
       {/* Hero — full-bleed dark, matching reference layout */}
       <section className="relative min-h-[92vh] flex items-end overflow-hidden bg-blue-950">
         <img

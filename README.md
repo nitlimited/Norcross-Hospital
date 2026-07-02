@@ -1,7 +1,12 @@
-# Norcross Hospital — Website
+# Norcross Hospital — Website & Operations App
 
-A React + Vite + Tailwind CSS v4 website for Norcross Hospital, structured after the
-Healcure Framer template and built entirely from the Norcross Hospital brief and logo.
+A React + Vite + Tailwind CSS v4 public website with an Express + MongoDB
+operations backend for Norcross Hospital.
+
+This repo is decoupled from Emergent. It runs as one application container and
+uses MongoDB for form submissions, appointment requests, editable site content,
+and integration metadata. Patient records should remain in the hospital
+management system, which this app can access through secure API integration.
 
 ## Run locally
 
@@ -10,7 +15,33 @@ npm install
 npm run dev
 ```
 
-Then open the printed local URL (usually http://localhost:5173).
+The Vite dev server opens the public frontend. API calls are proxied to
+`http://localhost:3000`, so run the API server in another terminal when testing
+forms or admin features:
+
+```bash
+MONGO_URI="mongodb://localhost:27017/norcross_hospital" \
+ADMIN_TOKEN="replace-with-a-long-random-token" \
+npm start
+```
+
+## Run locally with Docker
+
+```bash
+docker network create norcross-local
+docker run -d --name norcross-mongo --network norcross-local -p 27017:27017 mongo:7
+COPYFILE_DISABLE=1 docker build -t norcross-hospital .
+docker run --rm --name norcross-hospital \
+  --network norcross-local \
+  -p 8080:3000 \
+  -e MONGO_URI="mongodb://norcross-mongo:27017/norcross_hospital" \
+  -e ADMIN_TOKEN="replace-with-a-long-random-token" \
+  norcross-hospital
+```
+
+Open http://localhost:8080.
+
+Admin console: http://localhost:8080/admin
 
 ## Build for production
 
@@ -18,22 +49,59 @@ Then open the printed local URL (usually http://localhost:5173).
 npm run build
 ```
 
-Output goes to `dist/` — upload that folder's contents to any static host
-(Netlify, Vercel, Cloudflare Pages, cPanel, etc).
+Output goes to `dist/`. The production Docker image builds the frontend, installs
+production Node dependencies, and starts the Express server.
+
+## Deploy on Coolify
+
+Create a new Coolify application from this Git repository and choose
+**Dockerfile** as the build pack.
+
+- Dockerfile path: `Dockerfile`
+- Exposed port: `3000`
+- Health check path: `/api/health`
+- Required environment variables:
+  - `MONGO_URI` — MongoDB connection string
+  - `ADMIN_TOKEN` — long random admin token used to access `/admin`
+- Optional HMS integration variables:
+  - `HMS_API_BASE_URL` — base URL for the hospital management system API
+  - `HMS_API_TOKEN` — server-side API token for HMS access
+
+Provision MongoDB as a separate Coolify database/service, then set `MONGO_URI`
+on the app container. The application container should not embed MongoDB; that
+would make backups, scaling, upgrades, and recovery harder.
+
+Do not store HMS credentials in frontend code. The Express server proxies HMS
+requests server-to-server so tokens stay in Coolify environment variables.
+
+## Backend Features
+
+- Contact form submissions saved to MongoDB
+- Appointment requests saved to MongoDB
+- Admin review queues for messages and appointments
+- Editable contact details and homepage announcement
+- HMS patient lookup integration scaffold
+
+Patient records are not stored in this app. The hospital management system should
+remain the source of truth. Before showing real clinical data here, agree with
+the HMS developer on endpoints, allowed fields, authentication, audit logs, rate
+limits, consent/retention rules, and any required healthcare compliance controls
+for the operating jurisdiction.
 
 ## Pages
 
 - `/` — Home
 - `/about` — Story, mission, vision, philosophy, core values, team placeholder
 - `/services` — All 18 clinical service lines + facilities
-- `/contact` — Contact details, embedded Google Map, contact form, FAQ
+- `/contact` — Contact details, embedded Google Map, contact form, appointment request form, FAQ
+- `/admin` — Protected operations console
 
 ## Things left as placeholders (not in the original brief)
 
 - **Email / hours** — phone and address are filled in; see `src/data/content.js` → `contact` object for the remaining placeholders.
 - **Doctor/specialist profiles** — placeholder cards in `src/pages/About.jsx` (#doctors-team).
-- **Contact form submission** — the form UI works, but isn't wired to an email
-  service yet. Easiest options: Formspree, EmailJS, or a small backend endpoint.
+- **Admin authentication** — currently token-based. Replace with staff accounts,
+  MFA, roles, and audit trails before real clinical use.
 
 ## Brand
 

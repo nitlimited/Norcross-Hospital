@@ -1,6 +1,14 @@
 # Logs
 logs
 *.log
+.DS_Store
+._*
+**/._*
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
