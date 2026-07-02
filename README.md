@@ -3,7 +3,12 @@
 A React + Vite + Tailwind CSS v4 website for Norcross Hospital, structured after the
 Healcure Framer template and built entirely from the Norcross Hospital brief and logo.
 
+This repo is self-contained: it does not depend on Emergent services, generated
+platform config, or a separate backend to render the public website.
+
 ## Run locally
+
+Requires Node.js 20.19+ or 22.12+.
 
 ```bash
 npm install
@@ -12,14 +17,37 @@ npm run dev
 
 Then open the printed local URL (usually http://localhost:5173).
 
+## Run locally with Docker
+
+```bash
+COPYFILE_DISABLE=1 docker build -t norcross-hospital .
+docker run --rm -p 8080:80 norcross-hospital
+```
+
+Open http://localhost:8080.
+
 ## Build for production
 
 ```bash
 npm run build
 ```
 
-Output goes to `dist/` — upload that folder's contents to any static host
-(Netlify, Vercel, Cloudflare Pages, cPanel, etc).
+Output goes to `dist/`. The production Docker image builds this folder and
+serves it with nginx.
+
+## Deploy on Coolify
+
+Create a new Coolify application from this Git repository and choose
+**Dockerfile** as the build pack.
+
+- Dockerfile path: `Dockerfile`
+- Exposed port: `80`
+- Environment variables: none required for the static website
+- Health check path: `/`
+
+Coolify should build the Vite app, copy `dist/` into nginx, and serve the site
+from the container on port 80. The nginx config in the Dockerfile includes an
+SPA fallback so direct visits to `/about`, `/services`, and `/contact` work.
 
 ## Pages
 
