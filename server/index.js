@@ -14,6 +14,7 @@ const distDir = path.join(rootDir, "dist");
 
 const PORT = Number(process.env.PORT || 3000);
 const MONGO_URI = process.env.MONGO_URI;
+const DB_NAME = process.env.DB_NAME;
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 const HMS_API_BASE_URL = process.env.HMS_API_BASE_URL;
 const HMS_API_TOKEN = process.env.HMS_API_TOKEN;
@@ -272,7 +273,7 @@ app.use((err, _req, res, _next) => {
   res.status(status).json({ error: message });
 });
 
-await mongoose.connect(MONGO_URI);
+await mongoose.connect(MONGO_URI, DB_NAME ? { dbName: DB_NAME } : {});
 await SiteContent.updateOne(
   { key: "public" },
   { $setOnInsert: { key: "public", value: defaultPublicContent } },

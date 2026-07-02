@@ -20,7 +20,8 @@ The Vite dev server opens the public frontend. API calls are proxied to
 forms or admin features:
 
 ```bash
-MONGO_URI="mongodb://localhost:27017/norcross_hospital" \
+MONGO_URI="mongodb://localhost:27017/" \
+DB_NAME="norcross_hospital" \
 ADMIN_TOKEN="replace-with-a-long-random-token" \
 npm start
 ```
@@ -34,7 +35,8 @@ COPYFILE_DISABLE=1 docker build -t norcross-hospital .
 docker run --rm --name norcross-hospital \
   --network norcross-local \
   -p 8080:3000 \
-  -e MONGO_URI="mongodb://norcross-mongo:27017/norcross_hospital" \
+  -e MONGO_URI="mongodb://norcross-mongo:27017/" \
+  -e DB_NAME="norcross_hospital" \
   -e ADMIN_TOKEN="replace-with-a-long-random-token" \
   norcross-hospital
 ```
@@ -62,14 +64,17 @@ Create a new Coolify application from this Git repository and choose
 - Health check path: `/api/health`
 - Required environment variables:
   - `MONGO_URI` — MongoDB connection string
+  - `DB_NAME` — MongoDB database name, unless the database is already included in `MONGO_URI`
   - `ADMIN_TOKEN` — long random admin token used to access `/admin`
 - Optional HMS integration variables:
   - `HMS_API_BASE_URL` — base URL for the hospital management system API
   - `HMS_API_TOKEN` — server-side API token for HMS access
 
 Provision MongoDB as a separate Coolify database/service, then set `MONGO_URI`
-on the app container. The application container should not embed MongoDB; that
-would make backups, scaling, upgrades, and recovery harder.
+and `DB_NAME` on the app container. You can also include the database name in
+the URI path instead, for example `mongodb://host:27017/norcross_hospital`.
+The application container should not embed MongoDB; that would make backups,
+scaling, upgrades, and recovery harder.
 
 Do not store HMS credentials in frontend code. The Express server proxies HMS
 requests server-to-server so tokens stay in Coolify environment variables.
