@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Bloom from "./Bloom.jsx";
+import LogoMark from "./LogoMark.jsx";
 import Eyebrow from "./Eyebrow.jsx";
 import PanoramaViewer from "./PanoramaViewer.jsx";
 import useImageStatus from "../hooks/useImageStatus.js";
@@ -38,7 +38,7 @@ function SceneCard({ scene, onOpen }) {
         </>
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-blue-50 px-5 text-center">
-          <Bloom size={28} color="var(--color-blue-100)" />
+          <LogoMark opacity={0.35} className="w-8" />
           <p className="font-mono text-[11px] uppercase tracking-wide text-slate-light mt-3">
             {status === "loading" ? "Checking for image…" : `Add /vr-tour/${scene.id}.jpg`}
           </p>
@@ -76,10 +76,20 @@ export default function VRTour() {
             Step inside Norcross Hospital, before you visit.
           </h2>
         </div>
-        <p className="text-[16px] leading-relaxed text-slate">
-          Explore our laboratories, wards, and treatment rooms in immersive 360°. Click any
-          scene below, then drag to look around — just as if you were standing in the room.
-        </p>
+        <div>
+          <p className="text-[16px] leading-relaxed text-slate mb-6">
+            Explore our laboratories, wards, and treatment rooms in immersive 360°. Click any
+            scene below, then drag to look around — just as if you were standing in the room.
+          </p>
+          <button
+            type="button"
+            onClick={() => setActive(vrScenes[0])}
+            className="inline-flex items-center gap-2 rounded-full bg-blue-800 text-white text-[15px] font-semibold px-6 py-3 hover:bg-blue-700 transition-colors"
+          >
+            Tour Virtual Reality
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">

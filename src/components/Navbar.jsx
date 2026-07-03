@@ -3,7 +3,7 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 import { navLinks } from "../data/content.js";
 import logo from "../assets/norcross-logo.svg";
 
-const DARK_HERO_PATHS = ["/", "/about", "/services"];
+const DARK_HERO_PATHS = ["/", "/services"];
 
 export default function Navbar() {
   const { pathname } = useLocation();
@@ -26,16 +26,16 @@ export default function Navbar() {
         solid ? "bg-paper/95 backdrop-blur-md border-b border-line" : "bg-transparent"
       }`}
     >
-      <nav className="mx-auto max-w-7xl px-6 lg:px-10 flex items-center justify-between h-20">
+      <nav className="mx-auto max-w-7xl px-5 lg:px-8 flex items-center justify-between h-24">
         <Link to="/" className="flex items-center gap-3 shrink-0" onClick={() => setOpen(false)}>
           <img
             src={logo}
             alt="Norcross Hospital"
-            className={`h-9 w-auto transition-all duration-300 ${solid ? "" : "brightness-0 invert"}`}
+            className={`h-14 sm:h-16 w-auto transition-all duration-300 ${solid ? "" : "brightness-0 invert"}`}
           />
         </Link>
 
-        <div className="hidden md:flex items-center gap-9">
+        <div className="hidden lg:flex items-center gap-6 xl:gap-8">
           {navLinks.map((link) => (
             <NavLink
               key={link.to}
@@ -55,15 +55,15 @@ export default function Navbar() {
 
         <Link
           to="/contact"
-          className={`hidden md:inline-flex items-center gap-2 rounded-full text-[14px] font-semibold px-5 py-2.5 transition-colors ${
+          className={`hidden lg:inline-flex items-center gap-2 rounded-full text-[14px] font-semibold px-5 py-2.5 transition-colors ${
             solid ? "bg-blue-800 text-white hover:bg-blue-700" : "bg-white text-blue-900 hover:bg-blue-50"
           }`}
         >
-          Contact Us
+          Book Appointment
         </Link>
 
         <button
-          className="md:hidden inline-flex flex-col justify-center gap-1.5 w-10 h-10 items-center"
+          className="lg:hidden inline-flex flex-col justify-center gap-1.5 w-10 h-10 items-center"
           onClick={() => setOpen((o) => !o)}
           aria-label="Toggle menu"
           aria-expanded={open}
@@ -75,7 +75,7 @@ export default function Navbar() {
       </nav>
 
       {open && (
-        <div className="md:hidden border-t border-line bg-paper px-6 py-6 flex flex-col gap-5">
+        <div className="lg:hidden border-t border-line bg-paper px-6 py-6 flex flex-col gap-5">
           {navLinks.map((link) => (
             <NavLink
               key={link.to}
@@ -93,7 +93,7 @@ export default function Navbar() {
             onClick={() => setOpen(false)}
             className="inline-flex items-center justify-center rounded-full bg-blue-800 text-white text-[15px] font-semibold px-5 py-3"
           >
-            Contact Us
+            Book Appointment
           </Link>
         </div>
       )}

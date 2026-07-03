@@ -9,10 +9,19 @@ import Services from "./pages/Services.jsx";
 import Contact from "./pages/Contact.jsx";
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { hash, pathname } = useLocation();
+
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (hash) {
+      requestAnimationFrame(() => {
+        document.querySelector(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      return;
+    }
+
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [hash, pathname]);
+
   return null;
 }
 

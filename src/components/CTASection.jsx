@@ -1,21 +1,17 @@
 import { Link } from "react-router-dom";
-import Bloom from "./Bloom.jsx";
+import LogoMark from "./LogoMark.jsx";
 import { contact } from "../data/content.js";
 
 export default function CTASection() {
   return (
     <section className="relative overflow-hidden bg-blue-800 rounded-[2rem] mx-6 lg:mx-10 my-24 px-8 lg:px-16 py-16 lg:py-20 text-center">
-      <Bloom
-        size={320}
-        color="var(--color-blue-700)"
-        opacity={0.5}
-        className="absolute -left-20 -top-20 pointer-events-none"
+      <LogoMark
+        opacity={0.45}
+        className="absolute -left-20 top-10 w-[420px] pointer-events-none"
       />
-      <Bloom
-        size={260}
-        color="var(--color-orange-600)"
+      <LogoMark
         opacity={0.18}
-        className="absolute -right-16 -bottom-16 pointer-events-none"
+        className="absolute -right-14 -bottom-20 w-64 pointer-events-none rotate-12"
       />
       <div className="relative max-w-2xl mx-auto">
         <h2 className="font-display text-[32px] sm:text-[40px] leading-[1.1] text-white mb-4">

@@ -1,14 +1,13 @@
 import { useState } from "react";
-import Bloom from "../components/Bloom.jsx";
+import LogoMark from "../components/LogoMark.jsx";
 import Eyebrow from "../components/Eyebrow.jsx";
-import { contact as fallbackContact, faqs, services } from "../data/content.js";
+import { contact as fallbackContact, faqs } from "../data/content.js";
 import { usePublicContent } from "../hooks/usePublicContent.js";
 import { apiRequest } from "../lib/api.js";
 
 export default function Contact() {
   const { contact = fallbackContact } = usePublicContent();
   const [messageStatus, setMessageStatus] = useState("");
-  const [appointmentStatus, setAppointmentStatus] = useState("");
   const [error, setError] = useState("");
 
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(contact.mapQuery)}&output=embed`;
@@ -31,28 +30,10 @@ export default function Contact() {
     }
   }
 
-  async function handleAppointment(e) {
-    e.preventDefault();
-    setError("");
-    setAppointmentStatus("");
-
-    const form = new FormData(e.currentTarget);
-    try {
-      await apiRequest("/api/appointments", {
-        method: "POST",
-        body: Object.fromEntries(form.entries()),
-      });
-      e.currentTarget.reset();
-      setAppointmentStatus("Your appointment request has been saved. Our team will contact you to confirm availability.");
-    } catch (err) {
-      setError(err.message);
-    }
-  }
-
   return (
     <div>
       <section className="relative overflow-hidden pt-36 pb-16 lg:pt-44">
-        <Bloom size={520} color="var(--color-blue-100)" opacity={0.9} className="absolute -left-40 -top-24 pointer-events-none hidden lg:block" />
+        <LogoMark opacity={0.12} className="absolute -left-40 -top-24 w-[520px] pointer-events-none hidden lg:block" />
         <div className="relative mx-auto max-w-4xl px-6 lg:px-10 text-center">
           <Eyebrow>Contact Us</Eyebrow>
           <h1 className="font-display text-[36px] sm:text-[48px] leading-[1.1] text-blue-900 mt-5">
@@ -149,88 +130,6 @@ export default function Contact() {
             )}
           </form>
 
-          <form onSubmit={handleAppointment} className="rounded-2xl border border-line bg-white p-7 space-y-5 mt-8">
-            <h3 className="font-display text-[20px] text-blue-900 mb-1">Request an appointment</h3>
-            <div className="grid sm:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-[13px] font-medium text-slate mb-1.5" htmlFor="appointment-name">Full name</label>
-                <input
-                  id="appointment-name"
-                  name="name"
-                  required
-                  type="text"
-                  className="w-full rounded-lg border border-line px-4 py-2.5 text-[15px] focus:border-blue-700 outline-none"
-                  placeholder="Ama Mensah"
-                />
-              </div>
-              <div>
-                <label className="block text-[13px] font-medium text-slate mb-1.5" htmlFor="appointment-phone">Phone number</label>
-                <input
-                  id="appointment-phone"
-                  name="phone"
-                  required
-                  type="tel"
-                  className="w-full rounded-lg border border-line px-4 py-2.5 text-[15px] focus:border-blue-700 outline-none"
-                  placeholder="024 000 0000"
-                />
-              </div>
-            </div>
-            <div className="grid sm:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-[13px] font-medium text-slate mb-1.5" htmlFor="appointment-email">Email address</label>
-                <input
-                  id="appointment-email"
-                  name="email"
-                  type="email"
-                  className="w-full rounded-lg border border-line px-4 py-2.5 text-[15px] focus:border-blue-700 outline-none"
-                  placeholder="you@example.com"
-                />
-              </div>
-              <div>
-                <label className="block text-[13px] font-medium text-slate mb-1.5" htmlFor="preferredDate">Preferred date</label>
-                <input
-                  id="preferredDate"
-                  name="preferredDate"
-                  type="date"
-                  className="w-full rounded-lg border border-line px-4 py-2.5 text-[15px] focus:border-blue-700 outline-none"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-[13px] font-medium text-slate mb-1.5" htmlFor="service">Service</label>
-              <select
-                id="service"
-                name="service"
-                required
-                className="w-full rounded-lg border border-line px-4 py-2.5 text-[15px] focus:border-blue-700 outline-none bg-white"
-                defaultValue=""
-              >
-                <option value="" disabled>Select a service</option>
-                {services.map((service) => (
-                  <option key={service.name} value={service.name}>{service.name}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-[13px] font-medium text-slate mb-1.5" htmlFor="notes">Notes</label>
-              <textarea
-                id="notes"
-                name="notes"
-                rows={4}
-                className="w-full rounded-lg border border-line px-4 py-2.5 text-[15px] focus:border-blue-700 outline-none resize-none"
-                placeholder="Tell us what you need help with."
-              />
-            </div>
-            <button
-              type="submit"
-              className="inline-flex items-center gap-2 rounded-full bg-orange-600 text-white text-[15px] font-semibold px-7 py-3 hover:bg-orange-700 transition-colors"
-            >
-              Request Appointment
-            </button>
-            {appointmentStatus && (
-              <p className="text-[14px] text-orange-600">{appointmentStatus}</p>
-            )}
-          </form>
         </div>
 
         {/* Map */}
